@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="false" name="XMLConfigTest"
+               packages="org.apache.logging.log4j.test">
+  <Properties>
+		<Property name="basePath">./logs</Property>
+	</Properties>
+  <Filter type="ThresholdFilter" level="trace"/>
+ 
+  <Appenders>
+    <console class="ch.qos.logback.core.ConsoleAppender"
+		name="Console">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!-- <Pattern>%d{dd:MM:yyyy HH:mm:ss.SSS}: [%thread]: %-5level: TopicMicroService: 
+				%class{36}.%M: %L: %msg%n</Pattern> -->
+			<Pattern>%p %d [%t] %L - %m%n</Pattern>
+		</layout>
+	</console>
+    <RollingFile
+    name="File"
+    fileName="${basePath}/application.log"
+    filePattern="${basePath}/application.%d{dd-MMM}.log"
+    ignoreExceptions="false">
+    <PatternLayout>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
+    </PatternLayout>
+    <Policies>
+        <OnStartupTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="10 MB" />
+        <TimeBasedTriggeringPolicy />
+    </Policies>
+    <DefaultRolloverStrategy max="5" />
+</RollingFile>
+  </Appenders>
+ 
+  <Loggers>
+    <Logger name="org.apache.logging.log4j.test1" level="debug" additivity="false">
+      <Filter type="ThreadContextMapFilter">
+        <KeyValuePair key="test" value="123"/>
+      </Filter>
+      <AppenderRef ref="File"/>
+    </Logger>
+ 
+    <Logger name="org.apache.logging.log4j.test2" level="debug" additivity="false">
+      <AppenderRef ref="File"/>
+    </Logger>
+ 
+    <Root level="trace">
+      <AppenderRef ref="File"/>
+    </Root>
+  </Loggers>
+ 
+</Configuration>
